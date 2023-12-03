@@ -62,7 +62,7 @@ restaurantRouter.get(
 // Returns an error if slug isn't found
 restaurantRouter.get('/slug/:slug', async (req, res) => {
   console.log(req.params.slug);
-  const restaurant = await Restaurant.findOne({ slug: req.params.slug });
+  const restaurant = await Restaurant.findOne({ business_id: req.params.slug });
   if (restaurant) {
     res.send(restaurant);
   } else {

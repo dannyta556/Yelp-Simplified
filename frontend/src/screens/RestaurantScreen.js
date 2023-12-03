@@ -6,11 +6,10 @@ import Navbar from 'react-bootstrap/Navbar';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import { LinkContainer } from 'react-router-bootstrap';
-import RestaurantIcon from '../images/american-grub.jpg';
+import BusinessIcon from '../images/business.png';
 import Rating from '../components/rating.js';
 import addressIcon from '../images/address.png';
-import phoneIcon from '../images/phone.png';
-import websiteIcon from '../images/website.png';
+import MetroIcon from '../images/metro.png';
 import yelpIcon from '../images/yelp.png';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
@@ -30,8 +29,6 @@ const reducer = (state, action) => {
       return state;
   }
 };
-
-const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export default function RestaurantScreen() {
   const [query, setQuery] = useState('');
@@ -122,41 +119,36 @@ export default function RestaurantScreen() {
               <div className="restaurant-img-wrapper">
                 <img
                   className="restaurant-icon-img"
-                  width="125"
-                  height="125"
-                  src={`/images/${restaurant.slug}.jpg`}
+                  width="75"
+                  height="75"
+                  src={yelpIcon}
                   alt="restaurant-icon"
                 ></img>
               </div>
               <div className="restaurant-title-wrapper">
                 <p className="restaurant-name-title">{restaurant.name}</p>
                 <div className="ratings-wrapper">
-                  <Rating rating={restaurant.rating} numReviews={48} />
+                  <Rating
+                    rating={restaurant.stars}
+                    numReviews={restaurant.review_count}
+                  />
                 </div>
               </div>
               <div className="restaurant-contact-info">
-                <div className="contact-top-wrapper">
-                  <img
-                    className="restaurant-website-icon"
-                    src={websiteIcon}
-                    alt="website"
-                  />
-                  <div className="restaurant-website">{restaurant.website}</div>
-                  <img
-                    className="restaurant-phone-icon"
-                    src={phoneIcon}
-                    alt="phone"
-                  />
-                  <div className="restaurant-phone">{restaurant.phone}</div>
-                </div>
                 <div className="contact-bottom-wrapper">
                   <img
                     className="restaurant-address-icon"
                     src={addressIcon}
                     alt="address"
                   />
-
-                  <div className="restaurant-address">{restaurant.address}</div>
+                  <div className="restaurant-address">
+                    {restaurant.address ? restaurant.address : ''}
+                    {', '}
+                    {restaurant.city ? restaurant.city : ''}
+                    {', '}
+                    {restaurant.state ? restaurant.state : ''}
+                    {', '}
+                  </div>
                 </div>
               </div>
             </div>
@@ -166,32 +158,108 @@ export default function RestaurantScreen() {
                 {restaurant.pros.map((pro, index) => (
                   <p key={index}>{pro}</p>
                 ))}
+
+                {Object.entries(restaurant.attributes).map(
+                  ([key, val], idx) => {
+                    if (
+                      key !== 'HasTV' &&
+                      val === 'True' &&
+                      idx < 15 &&
+                      restaurant.pros.length < 2
+                    ) {
+                      var stringArray = key.match(/[A-Z][a-z]+/g);
+                      var finalString = '';
+                      for (var i = 0; i < stringArray.length; i++) {
+                        finalString = finalString.concat(
+                          ' ',
+                          stringArray[i].toLowerCase()
+                        );
+                      }
+                      return (
+                        <p key={`pro-${key}`} className="pro-body">
+                          {finalString}
+                        </p>
+                      );
+                    }
+
+                    return <></>;
+                  }
+                )}
               </span>
               <span className="cons-info">
                 <p className="pros-header">Cons</p>
                 {restaurant.cons.map((con, index) => (
                   <p key={index}>{con}</p>
                 ))}
+                {Object.entries(restaurant.attributes).map(
+                  ([key, val], idx) => {
+                    if (
+                      restaurant.attributes !== null &&
+                      key !== 'HasTV' &&
+                      val === 'False' &&
+                      idx < 15 &&
+                      restaurant.cons.length < 2
+                    ) {
+                      var stringArray = key.match(/[A-Z][a-z]+/g);
+                      var finalString = '';
+                      for (var i = 0; i < stringArray.length; i++) {
+                        finalString = finalString.concat(
+                          ' ',
+                          stringArray[i].toLowerCase()
+                        );
+                      }
+                      return (
+                        <p key={`con-${key}`} className="pro-body">
+                          {'no '}
+                          {finalString}
+                        </p>
+                      );
+                    }
+
+                    return <></>;
+                  }
+                )}
               </span>
               <span className="images-info">
                 <div className="store-image">
-                  <img alt="placeholder" />
+                  <img src={BusinessIcon} alt="placeholder" />
                 </div>
                 <div className="store-image-2">
-                  <img alt="placeholder" />
+                  <img src={MetroIcon} alt="placeholder" />
                 </div>
               </span>
               <span className="hours-info">
-                <p className="pros-header hours-header">Hours</p>
-                {restaurant.hours.map((hour, index) => (
-                  <div key={index} className="hour-wrapper">
-                    <span className="hour-days">{days[index]}</span>
-                    <span className="hour">{hour}</span>
-                  </div>
-                ))}
+                {restaurant.hours !== null ? (
+                  <>
+                    <p className="pros-header hours-header">Hours</p>
+                    {Object.keys(restaurant.hours).map((key, val) => {
+                      let [a, b] = restaurant.hours[key].split('-');
+                      a = a + '0';
+                      b = b + '0';
+                      return (
+                        <>
+                          <p className="hour-days">
+                            {key}
+                            {': '}
+                          </p>
+                          <p className="hour">
+                            {a} {' - '} {b}
+                          </p>
+                        </>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    <p className="pros-header hours-header">No hours found</p>
+                  </>
+                )}
               </span>
             </div>
-            <div className="additional-insights-section"></div>
+            <div className="additional-insights-section">
+              {'Categories: '}
+              {restaurant.categories}
+            </div>
           </div>
         </div>
       </div>

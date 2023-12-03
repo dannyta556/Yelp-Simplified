@@ -129,36 +129,49 @@ export default function SearchScreen() {
               <Row>
                 {restaurants.map((restaurant, index) => (
                   <Col sm={8} lg={6} className="mb-3" key={index}>
-                    <Card key={index} className="restaurant-card" border="dark">
+                    <Card
+                      key={index}
+                      className="restaurant-card"
+                      bg={'Light'}
+                      border="dark"
+                    >
+                      <Card.Header className="header-txt">
+                        {restaurant.categories}
+                      </Card.Header>
                       <Stack direction="vertical" gap={2}>
-                        <Link to={`/restaurant/${restaurant.slug}`}>
-                          <img
-                            src={`/images/${restaurant.slug
-                              .replace(/ /g, '_')
-                              .replace(/["]/g, '')
-                              .replace(/☆/g, '_')
-                              .replace(/★/g, '_')
-                              .replace(/α/g, 'a')
-                              .replace(/☆/g, '_')
-                              .replace(/[/]/g, '')
-                              .replace(/:/g, '')}.jpg`}
-                            className="card-img-top"
-                            alt={restaurant.name}
-                          />
-                        </Link>
                         <Card.Body className="restaurant-card-body">
                           <Link
                             className="restaurant-card-title"
-                            to={`/restaurant/${restaurant.slug}`}
+                            to={`/restaurant/${restaurant.business_id}`}
                           >
                             <Card.Title className="restaurant-card-title">
                               {restaurant.name}
                             </Card.Title>
-                            <Rating
-                              rating={restaurant.rating}
-                              numReviews={restaurant.numReviews}
-                            />
                           </Link>
+                          <Card.Text className="header-txt">
+                            <Rating
+                              rating={restaurant.stars}
+                              numReviews={restaurant.review_count}
+                            />
+                            <div>
+                              {restaurant.address ? restaurant.address : ' '}
+                              {', '}
+                              {restaurant.city ? restaurant.city : ' '} {', '}
+                              {restaurant.state ? restaurant.state : ''}
+                            </div>
+                            <div>
+                              {restaurant.postal_code
+                                ? restaurant.postal_code
+                                : ''}
+                            </div>
+                            {restaurant.isOpen === 1 ? (
+                              <div className="card-status">Currently open</div>
+                            ) : (
+                              <div className="card-status">
+                                Currently Closed
+                              </div>
+                            )}
+                          </Card.Text>
                         </Card.Body>
                       </Stack>
                     </Card>
