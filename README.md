@@ -18,7 +18,10 @@ Starting in the hatching sparrow folder
   MONGODB_URI=mongodb://localhost/yelpsimplified
 8. in backend folder, do "npm start"
 9. in browser, navigate to localhost:5001/api/seed
-10. Should see success message, database is created.
+10. then navigate to localhost:5001/api/test
+11. then navigate to localhost:5001/api/cleanTips
+12. then navigate to localhost:5001/api/mapAnalysis
+13. Should see success messages, database is created and formatted.
 
 ## Running the application
 
