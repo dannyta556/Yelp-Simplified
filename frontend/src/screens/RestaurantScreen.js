@@ -14,8 +14,10 @@ import yelpIcon from '../images/yelp.png';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import LoadingBox from '../components/LoadingBox.js';
+import { getError } from '../utils';
 
 import axios from 'axios';
+import MessageBox from '../components/MessageBox.js';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -50,7 +52,7 @@ export default function RestaurantScreen() {
         const result = await axios.get(`/api/restaurants/slug/${slug}`);
         dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
       } catch (err) {
-        dispatch({ type: 'FETCH_FAIL', payload: err });
+        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
     fetchData();
@@ -76,6 +78,44 @@ export default function RestaurantScreen() {
 
   return loading ? (
     <LoadingBox />
+  ) : error ? (
+    <div className="App">
+      <header className="secondary-header">
+        <Navbar>
+          <div className="header">
+            <LinkContainer to="/">
+              <h1 className="title-minimized">
+                Yelp Simplified <img src={yelpIcon} alt="yelp" />
+              </h1>
+            </LinkContainer>
+
+            <Form className="search-box-minimized" onSubmit={submitHandler}>
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  name="q"
+                  id="q"
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="search for a restaurant"
+                  aria-label="Search Products"
+                  aria-describedby="button-search"
+                  htmlSize="150"
+                ></FormControl>
+                <Button
+                  variant="outline-primary"
+                  type="submit"
+                  id="button-search"
+                  className="search-btn"
+                >
+                  Go
+                </Button>
+              </InputGroup>
+            </Form>
+          </div>
+        </Navbar>
+      </header>
+      <MessageBox variant="danger">{error}</MessageBox>
+    </div>
   ) : (
     <div className="App">
       <header className="secondary-header">
