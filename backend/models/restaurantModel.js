@@ -1,11 +1,9 @@
 import mongoose from 'mongoose';
-import slugify from 'slugify';
 
 const restaurantSchema = new mongoose.Schema(
   {
     name: { type: String, default: 'restaurant', required: true },
     business_id: { type: String, required: true, unique: true },
-    slug: { type: String, required: true, unique: true },
     stars: { type: Number, default: 0, required: true },
     review_count: { type: Number, default: 0, required: true },
     address: { type: String, default: 'none', required: true },
@@ -23,13 +21,6 @@ const restaurantSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-restaurantSchema.pre('validate', function (next) {
-  if (this.name) {
-    this.slug = slugify(this.name, { lower: true, strict: true });
-  }
-  next();
-});
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 export default Restaurant;
